@@ -3,8 +3,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
-import net.easyconn.carman.utils.FileUtils;
-
 import java.io.File;
 
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
