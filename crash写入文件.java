@@ -1,4 +1,4 @@
-```java
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -61,13 +61,13 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     }
 }
-```
 
-**使用：**
 
-```java
+使用：
+
+
 private static void initErrorHandler(Context context) {
         CrashHandler handler = CrashHandler.getInstance();
         handler.init(context);
     }
-```
+
