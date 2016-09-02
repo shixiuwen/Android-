@@ -7,3 +7,8 @@
             inputMethodManager.hideSoftInputFromWindow(mFragmentActivity.getWindow().getDecorView().getWindowToken(), 0x0);
         }
     }
+    
+    /**
+     * 除了performClick之外的另一种模拟点击
+     * */
+    
