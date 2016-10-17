@@ -1,0 +1,35 @@
+~~~java
+Github使用指南：
+1.	安装GitBash
+2.	在gitBash中执行命令：cd  ~
+3.	ssh-keygen -t rsa -C shixiuwen1991@yeah.net
+会在默认目录中生成：
+/c/Users/Administrator/.ssh/id_rsa
+用记事本打开，将其中内容复制到GitHub的SSH设置中，这样你的电脑才能和GitHub中新建立的库同步
+现在开始使用GitHub:
+1.	在本地建立一个Android工程，名字比如WeChat(或者假设你的本地已经有一个名字叫做WeChat的工程，想同步到GitHub进行代码托管)
+2.	在GitHub上创建一个同名的库
+3.	在gitbash中，切换到你工程所在目录，执行以下命令：
+git init
+git add .
+git commit –m “测试第一次提交到本地”
+4.	将本地库同GitHub上的库关联
+git remote add origin git@github.com:shixiuwen/WeChat.git
+git push origin master
+执行到这一步，你的本地库已经推送到GitHub上了，同时同步了一个主分支master
+5.	切换分支进行工作：
+git checkout –b jrw
+6.	进行代码修改后提交代码
+git add .
+git commit –m “在分支上提交操作”
+7.	切换回主分支拉最新代码：
+git checkout master
+git pull
+8.	切回jrw分支合并主分支master可能被他人修改后的代码
+git checkout jrw
+git merge master(该步骤执行完后可能会有冲突，有冲突的话执行git add . git commit )
+git push origin jrw（这是在提交合并请求，执行完该步骤之后去GitHub执行push request 然后等待主分支接受合并）
+9.	其他操作：
+git fetch origin 
+git checkout –b amos origin/amos
+```
