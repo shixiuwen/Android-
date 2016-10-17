@@ -1,4 +1,4 @@
-~~~java
+
 Github使用指南：
 1.	安装GitBash
 2.	在gitBash中执行命令：cd  ~
@@ -32,4 +32,4 @@ git push origin jrw（这是在提交合并请求，执行完该步骤之后去G
 9.	其他操作：
 git fetch origin 
 git checkout –b amos origin/amos
-```
+
