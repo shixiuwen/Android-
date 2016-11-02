@@ -23,4 +23,15 @@
                 .obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
                         MotionEvent.ACTION_UP, view.getLeft() + 5, view.getTop() + 5, 0));
     }
+
+    /**
+     * 以下代码解决ScrollView中EditText导致自动滚动问题
+     * */
+      scrollView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        scrollView.setFocusable(true);
+        scrollView.setFocusableInTouchMode(true);
+        scrollView.setOnTouchListener((v, event) -> {
+            v.requestFocusFromTouch();
+            return false;
+        });
     
