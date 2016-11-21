@@ -1,0 +1,8 @@
+1.在做Android与JS相互调用的时候，通过点击Android原生按钮调用JS中的方法，发现无法触发JS中的alert弹窗，进行以下修改即可：
+webView.setWebChromeClient(new WebChromeClient());  //不设置该项无法弹出JS弹窗
+同时通过自定义WebChromeClient,还可以对获取的JS内容进行其他处理，其回调方法中有很多应用，比如onJsAlert()弹窗处理，以及权限请求回调处理等！
+
+2.在通过WebView下载文件的时候，希望如我们常见的html页面一样弹出系统下载弹窗进行文件下载，发现无法显示文件下载弹窗，进行如下设置即可：
+webView.setDownloadListener(new WebViewDownLoadListener()); //不设置该项无法下载文件
+
+3.
