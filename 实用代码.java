@@ -34,4 +34,12 @@
             v.requestFocusFromTouch();
             return false;
         });
+
+    /**
+     * 格式化字符串，自动替换string资源内容
+     * */
+    string.xml中可以这样写，<string name="alert">我的名字叫%1$s，我来自%2$s</string> 
+
+    String sAgeFormatString sAgeFormat1= getResources().getString(R.string.alert);     
+    String sFinal1 = String.format(sAgeFormat1, "李四","首都北京"); 
     
