@@ -42,4 +42,13 @@
 
     String sAgeFormatString sAgeFormat1= getResources().getString(R.string.alert);     
     String sFinal1 = String.format(sAgeFormat1, "李四","首都北京"); 
+
+    /**
+     * 最好的确认Activity是否在前台可见的方法
+     * This is the best indicator of whether this activity is visible to the user.
+     * 重写Activity的：
+     * */
+    public void onWindowFocusChanged(boolean hasFocus) {
+    }
+    
     
