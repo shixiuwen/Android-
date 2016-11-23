@@ -5,4 +5,12 @@ webView.setWebChromeClient(new WebChromeClient());  //不设置该项无法弹�
 2.在通过WebView下载文件的时候，希望如我们常见的html页面一样弹出系统下载弹窗进行文件下载，发现无法显示文件下载弹窗，进行如下设置即可：
 webView.setDownloadListener(new WebViewDownLoadListener()); //不设置该项无法下载文件
 
-3.
+3.我想要用WebView组件载入一个HTML，但是HTML太大，每次显示都超出屏幕，请问有什么办法在屏幕上缩小全部显示出来吗?
+通过  WebSettings settings = webView.getSettings(); 
+     settings.setUseWideViewPort(true); 
+     settings.setLoadWithOverviewMode(true); 
+就可以解决了，而且还可以实现双击放大，再次双击显示缩略图的功能。
+
+4.WebView如何加载本地html文件？
+通过设置：WebView.loadUrl("file:///android_asset/error.html");
+其中，error.html的文件路径为：./main/assets/error.html
