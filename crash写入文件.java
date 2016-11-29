@@ -38,26 +38,47 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public synchronized void uncaughtException(Thread thread, final Throwable ex) {
         try {
-            File file = new File(FileUtils.getDiskCacheDir(mContext, "crash"), "crash.log");
+            File file = new File(getDiskCacheDir(mContext, "crash"), "crash.log");
 
             if (file.exists() && file.length() > 10 * 1024 * 1024) {
-                file.delete();
+                boolean delete = file.delete();
             } else {
-                FileUtils.writeLog(
-                        new File(FileUtils.getDiskCacheDir(mContext, "crash"), "crash.log"), ex);
+                File folder = new File(getDiskCacheDir(mContext, "crash"));
+                if (folder.exists() && folder.isDirectory()) {
+                    if (!file.exists()) {
+                        boolean newFile = file.createNewFile();
+                    }
+                } else {
+                    boolean mkDir = folder.mkdir();
+                    if (mkDir) {
+                        boolean newFile = file.createNewFile();
+                    }
+                }
+                FileOutputStream fos = new FileOutputStream(file, true);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);
+                String format = sdf.format(new Date());
+                byte[] bytes = (format +
+                        "\n" + e.toString() +
+                        "\n" + "----------------------" +
+                        "\n").getBytes();
+                fos.write(bytes);
+                fos.flush();
+                fos.close();
             }
-        } catch (Exception e) {
-            StatsUtils.reportError(mContext, new Exception(("save error log to sdcard faild")), 1);
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
         //crash后重启
-        ComponentName componentName = new ComponentName("package name", "default activity");
+        /*ComponentName componentName = new ComponentName("com.jlcf.jiuxin", "com.jlcf.jiuxin.JXApplication");
         Intent schemIntent = new Intent();
         schemIntent.setComponent(componentName);
         schemIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(schemIntent);
+        mContext.startActivity(schemIntent);*/
 
-    }
+        if (true) {
+            mDefaultHandler.uncaughtException(t, e);    //该代码不执行的话程序无法终止
+        }
 }
 
 
