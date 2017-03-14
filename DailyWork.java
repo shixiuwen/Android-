@@ -26,5 +26,5 @@
 2017.03.14
  1.滑动动速度跟踪类 android.view.VelocityTracker 
  2.android.view.ViewConfiguration
- 3.android:descendantFocusability(setDescendantFocusability)
+ 3.android:descendantFocusability(setDescendantFocusability)(item中包含类似button等获取焦点问题)
  4.
