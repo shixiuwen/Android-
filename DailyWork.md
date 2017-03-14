@@ -10,24 +10,29 @@
  
  
 **2016.10.21**
+
 1.webView方法：向下翻滚或者向上翻滚，回到顶部（底部）
 pageUp(boolean top)
 pageDown(boolean bottom)
  
 **2017.02.22(有用但是未使用过的类)**
+
 1.BigDecimal
 2.MathContext
 3.CountDownTimer（Android中倒计时的正确使用姿势）
 4.AtomicInteger（一个提供原子操作的Integer的类。在Java语言中，++i和i++操作并不是线程安全的，在使用的时候，不可避免的会用到synchronized关键字。而AtomicInteger则通过一种线程安全的加减操作接口。）
  
 **2017.02.23**
+
 1.android:textIsSelectable="true" (textView长按选择文本，可自定义操作菜单)
 
 **2017.03.14**
+
 1.滑动动速度跟踪类 android.view.VelocityTracker 
 2.android.view.ViewConfiguration
 3.android:descendantFocusability(setDescendantFocusability)(item中包含类似button等获取焦点问题)
 4.滑动事件中判断是点击事件还是滑动事件的正确打开姿势：
+
 ```java
 ViewConfiguration conf = ViewConfiguration.get(getContext());
 mMinimumVelocity = conf.getScaledMinimumFlingVelocity();
