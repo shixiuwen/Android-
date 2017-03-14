@@ -22,3 +22,6 @@
  
 2017.02.23
  1.android:textIsSelectable="true" (textView长按选择文本，可自定义操作菜单)
+
+2017.03.14
+ 1.滑动动速度跟踪类VelocityTracker
