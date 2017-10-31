@@ -50,5 +50,10 @@
      * */
     public void onWindowFocusChanged(boolean hasFocus) {
     }
+
+    /**
+     * 每4位数字后面补一个空格，适用于银行卡号的输入
+     * */
+    afterText.replaceAll(" ", "").replaceAll("\\d{4}(?!$)", "$0 ")
     
     
