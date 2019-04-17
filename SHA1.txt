@@ -1,0 +1,45 @@
+E:\Itcast\develop\AndroidStudio\MyASCode\xxx>cd /.android
+
+E:\.android>
+E:\.android>keytool -list -v -keystore debug.keystore
+输入密钥库口令:
+
+密钥库类型: JKS
+密钥库提供方: SUN
+
+您的密钥库包含 1 个条目
+
+别名: androiddebugkey
+创建日期: 2015-11-30
+条目类型: PrivateKeyEntry
+证书链长度: 1
+证书[1]:
+所有者: CN=Android Debug, O=Android, C=US
+发布者: CN=Android Debug, O=Android, C=US
+序列号: 539d9b78
+有效期开始日期: Mon Nov 30 21:01:52 CST 2015, 截止日期: Wed Nov 22 21:01:52 CST 2045
+证书指纹:
+         MD5: 90:CB:6C:9B:A4:20:94:10:D5:56:14:62:B5:46:82:4F
+         SHA1: DD:00:34:BC:78:CA:B7:D0:01:51:6C:33:A1:69:89:71:31:E4:5D:D8
+         SHA256: 4C:79:51:69:E2:BA:CA:2B:DD:0A:10:D4:84:82:BF:72:D9:52:0D:9B:AA:2D:F5:C6:93:EA:CF:98:84:B1:B7:8D
+         签名算法名称: SHA256withRSA
+         版本: 3
+
+扩展:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 09 87 DB 27 A0 AA 20 6B   06 12 02 A9 7A B8 D1 3F  ...'.. k....z..?
+0010: 14 A5 E2 D6                                        ....
+]
+]
+
+
+
+*******************************************
+*******************************************
+
+
+
+E:\.android>

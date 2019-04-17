@@ -1,0 +1,798 @@
+规范:
+1.服务器当前时间统一用名称nowtime
+
+2.所有键值对的值都采用引号 字符串形式，比如:”0”、”0.00”、”success”、”\u624b\u673a\u53f7\u5df2\u7ecf\u88ab\u6ce8\u518c”
+
+3.值 不要放 空 null，都附默认值，例如：  整型:”0”  ，浮点型:”0.00”   ，字符串:””    ， 数组:[]   ， 数据字典:{}
+
+4.数据封装尽量用一个层级  例如：{id:”1”, customer:{sex:”1” ,   age:”18”,  hasHouse:”1”}}  尽量写成 {id:”1”, sex:”1” ,   age:”18”,  hasHouse:”1”}
+
+5.一些涉及类型、状态值 需要转码的数据，尽量在后台处理后，直接传描述字符串给前端，不需要前端做转码
+
+6.数据封装方式统一为{“status":1,"info”:”操作成功”,”data”:{}}或{“status":1,"info”:”操作成功”,”data”:[{},{}]} ，status为状态码描述操作状态，info为状态描述信息，data为数据封装体，单行数据用{}，
+多行数据用[{},{}]    状态定义自行约定 后期文档化 特别是业务操作状态码
+
+7.公共状态码和描述：
+  (
+   1   => ‘操作成功’,
+   2   => ‘操作失败’,
+   6   => '非法操作',
+   100 => '参数不合法',
+   101 => '记录为空',
+
+  )
+
+8.请求参数如果不是特别说明，均为必要提供(如果不被需要的参数，请置默认值，例如：“”，“0”，“0.00”)。
+
+9.测试阶段将url前缀替换成http://192.168.1.76，上线阶段将url替换成http://www.jiurong.cn(仅供参考，根据实际情况来)
+
+具体接口：
+
+1.登录
+请求url：http://www.jiurong.cn/Api/Public/login
+请求参数：手机号：mobile  登录密码：loginPwd（md5加密后密码字符串，拼接的加密key会在注册时生成）
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{"userId”:”10259”, ”userMobile”:”15727047813”}}
+涉及状态码和描述：
+   201 => ‘手机号不存在',
+   202 => ‘登录密码不能为空',
+   203 => ‘登录密码不正确',
+   217 => '手机号不能为空',   218 => '手机号格式不正确',
+
+
+2.获取密码加密key
+请求url：http://www.jiurong.cn/Api/Public/getPwdKey
+请求参数：手机号：mobile  用户id:userId
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{"pwdKey”:”24567”}}
+涉及状态码和描述：
+   201 => ‘手机号不存在',
+   217 => '手机号不能为空',
+
+
+3.注册
+请求url：http://www.jiurong.cn/Api/Public/register
+请求参数：手机号：mobile  登录密码：loginPwd  登录密码加密key：pwdKey  短信验证码：smsID  注册IP：regIP(非必要)  注册平台：regPlatform  (1.android 2.iOS 3.WAP)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{"userId”:”10259”, ”userMobile”:”15727047813”}}
+涉及状态码和描述：
+   202 => ‘登录密码不能为空',
+   206 => ‘短信验证码不能为空’,
+   209 => ‘短信验证码不正确’,
+   211 => '手机号已经被注册',
+   217 => '手机号不能为空',   218 => '手机号格式不正确',
+   400 => ‘注册平台不能为空’
+   403 => ‘登录密码加密key不能为空’
+
+
+4.获取短信验证码
+请求url：http://www.jiurong.cn/Api/Public/getSMSID
+请求参数：手机号：mobile  类型：type(1.注册2.重置登录密码)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data”:{}}
+涉及状态码和描述：
+   217 => '手机号不能为空',   218 => '手机号格式不正确',
+   220 => ‘短信验证码发送失败',
+   401 => ‘类型不能为空’,
+   402 => ‘类型值不存在’
+
+
+5.重置登录密码
+请求url：http://www.jiurong.cn/Api/Public/resetLoginPwd
+请求参数：用户id:userId 新登录密码：newLoginPwd  手机号：mobile  短信验证码：smsID  登录密码加密key：pwdKey
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{"userId”:”10259”, ”userMobile”:”15727047813”}}
+涉及状态码和描述：
+   202 => ‘登录密码不能为空',
+   206 => ‘短信验证码不能为空’,
+   209 => ‘短信验证码不正确’,
+   217 => '手机号不能为空',   218 => '手机号格式不正确',
+   403 => ‘登录密码加密key不能为空’
+
+
+
+6.首页->获取轮播图
+请求url：http://www.jiurong.cn/Api/Public/getBannerImages
+请求参数：
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”: [
+        {
+            “imageUrl”: "http://www.jiurong.cn/..",
+            “linkUrl”: "http://www.jiurong.cn/..",
+        },
+        {
+            “imageUrl”: "http://www.jiurong.cn/..",
+            “linkUrl”: "http://www.jiurong.cn/..",
+        }
+    ]
+}
+imageUrl表示轮播图url
+linkUrl表示轮播图跳转的链接url
+
+
+涉及状态码和描述：
+   101 => ‘记录为空',
+
+7.买车->车辆列表|搜索->大家都在搜／热门搜索(点击标签)|搜索->搜索历史(点击标签)
+请求url：http://www.jiurong.cn/Api/Public/getCars
+请求参数： 排序方式：sortMode(0.默认排序 1.价格最高 2.价格最低 3.最新发布 4.里程最短 5.车龄最短)
+         车辆品牌id：brandId(0.表示不限品牌)
+         车倆系列id：seriesId(0.表示不限车系)
+         价格上限：priceMax
+         价格下限：priceMin
+         价格区间：priceRange(0.不限 1.3万以下 2.3-5万 3.5-10万 4.10-15万 5.15-20万)
+         车类别：carClass(1.轿车 2.跑车 3.SUV 4.MPV 5.商务车) 可多选逗号分割
+         变速箱：carGearboxType(1.手动 2.自动 3.手自一体) 可多选逗号分割
+         车龄下限：carAgeMin
+         车龄上限：carAgeMax(-1表示无穷大)
+         公里数下限：carTravelKmMin
+         公里数上限：carTravelKmMax(-1表示无穷大)
+         排量下限：carDisplacementMin
+         排量上限：carDisplacementMax(-1表示无穷大)
+         排放标准：carEnvStd(1.国1 2.国2 3.国3 4.国4 5.国5) 可多选逗号分割
+         品牌或车型或车系名称：searchContent(模糊查询用，该字符串可能是品牌、车型或车系名称)
+         类型 type(0.未定义 1.好车推荐 2.最新上架 3.准新车 4.练手车 5.SUV)
+         当前页码：curPageNo
+         每页显示数目：pageSize(传99999999表示全部)
+         记录数偏移量：offset(用来修正分页查询起始记录数的，－1表示减1，+1表示加1) 默认0
+         用户id：userId 默认0
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”: [
+        {
+            “carId”:”1”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI豪华型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isCollected”: "0"
+        },
+        {
+            “carId”:”2”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI普通型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isCollected”: "0"
+        }
+    ]
+}
+carId车辆id
+carImageUrl表示车辆缩略图url
+carModeName表示车辆款型名称
+carLicenseTime表示车辆上牌日期
+carTravelKm表示车辆行驶公里数
+carSellPrice表示车辆卖价
+isCollected表示是否被收藏(0.表示未收藏 1.表示已收藏)
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+8.获取车辆详情
+请求url：http://www.jiurong.cn/Api/Public/getCarDetail
+请求参数： 车辆id：carId  用户id：userId 默认0
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”:
+        {
+            “carId”:”1”,
+            “carImageUrls”: [
+                "http://www.jiurong.cn/..",
+                "http://www.jiurong.cn/..",
+                "http://www.jiurong.cn/..",
+                "http://www.jiurong.cn/..",
+                "http://www.jiurong.cn/.."
+            ],
+            “carModeName”: "大众速腾1.4T手动230TSI豪华型",
+            “carLicenseTime”: "2010-06-23",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “carFirmPrice”: “12-15万",
+            “carIdentity”: "1",
+            “carDisplacement”: "2.0L",
+            “carLicenseArea”: "北京",
+            “carEnvStd”: "国四",
+            “carGearboxType”: "手动",
+            “carComment”: "xxxxx",
+            “carInspector”: "王某某",
+            “carInspectTime”: "2016-05-23”,
+            “carSeriesName”: “大众速腾”,
+            “isCollected”: "0"
+        }
+    }
+
+carId车辆id
+carImageUrls表示若干张车辆缩略图url数组
+carModeName表示车辆款型名称
+carLicenseTime表示车辆上牌日期
+carTravelKm表示车辆行驶公里数
+carSellPrice表示车辆卖价
+carFirmPrice表示车辆厂商报价
+carIdentity表示车源标识(1.0过户(未办理过过户的车辆)、2.准新车(购车时间1年以内且行驶公里数在5万公里以内车辆)、3.优质车况(保养得当无大型损伤)、4.热销车型(市场保有量高并且保养费低)、5.特惠车辆(价格优惠并且急于出手的车辆)，一个车辆可以有多个车源标识，分隔符为逗号(1,2,3)）
+carDisplacement车辆排量
+carLicenseArea车辆上牌地址
+carEnvStd车辆环保标准
+carGearboxType车辆变速箱类型
+carComment车辆评价
+carInspector车辆检查人
+carInspectTime车辆检查时间
+carSeriesName车系名称
+isCollected表示是否被收藏(0.表示未收藏 1.表示已收藏)
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+9.搜索->获取热门搜索(大家都在搜)
+请求url：http://www.jiurong.cn/Api/Public/getHotSearch
+请求参数：
+请求方式：post
+返回json串：{
+    "status": 1,
+    "info": "操作成功",
+    "data": {
+        "hotSearch": [
+            "suv",
+            "哈弗h2",
+            "哈弗",
+            "本田",
+            "本田思域"
+        ]
+    }
+}
+
+hotSearch 热门搜索内容，对应可能是品牌、车系或车类别
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+
+10.车辆信息收藏
+请求url：http://www.jiurong.cn/Api/Public/collectCar
+请求参数： 车辆id：carId 用户id：userId  收藏平台：collectPlatform(1.android 2.iOS 3.WAP)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+11.取消车辆信息的收藏(单个或全部)
+请求url：http://www.jiurong.cn/Api/Public/cancelCollect
+请求参数： 车辆id：carId(取消单个收藏记录用这个，默认0)  用户id：userId(取消单个或全部时传这个参数，默认0)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+
+12.记录登录用户的询价行为
+请求url：http://www.jiurong.cn/Api/Public/inquiryCar
+请求参数： 车辆id：carId 用户id：userId  询价平台：inquiryPlatform(1.android 2.iOS 3.WAP)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+13.清空用户的全部询价记录
+请求url：http://www.jiurong.cn/Api/Public/clearInquiry
+请求参数： 用户id：userId
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+14.获取品牌信息
+请求url：http://www.jiurong.cn/Api/Public/getBrandInfo
+请求参数：
+请求方式：post
+返回json串：{
+    "status":1,
+    "info":"操作成功",
+    "data":[
+        {
+            "brandId":"1",
+            "brandName":"别克",
+            "brandIndex":"B",
+            "series":[
+                {
+                    "seriesId":"1",
+                    "seriesName":"别克英朗",
+                    "firmName":"上海别克",
+                    "firmId":"12"
+                },
+                {
+                    "seriesId":"2",
+                    "seriesName":"别克君越",
+                    "firmName":"上海别克",
+                    "firmId":"12"
+                }
+            ]
+        },
+        {
+            "brandId":"2",
+            "brandName":"宝马",
+            "brandIndex":"B",
+            "series":[
+                {
+                    "seriesId":"1",
+                    "seriesName":"宝马323",
+                    "firmName":"华晨宝马",
+                    "firmId":"12"
+                },
+                {
+                    "seriesId":"2",
+                    "seriesName":"宝马3002",
+                    "firmName":"华晨宝马",
+                    "firmId":"12"
+                }
+            ]
+        },
+        {
+            "brandId":"3",
+            "brandName":"奥迪",
+            "brandIndex":"A",
+            "series":[
+                {
+                    "seriesId":"1",
+                    "seriesName":"奥迪Q3",
+                    "firmName":"一汽-大众奥迪",
+                    "firmId":"12"
+                },
+                {
+                    "seriesId":"2",
+                    "seriesName":"奥迪Q5",
+                    "firmName":"一汽-大众奥迪",
+                    "firmId":"12"
+                }
+            ]
+        }
+    ]
+}
+
+brandId 品牌id
+brandName 品牌名称
+brandIndex 品牌索引
+series 车系
+seriesId 车系id
+seriesName 车系名称
+firmName 对应厂商名称
+firmId 对应厂商id
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+
+16.获取城市信息
+请求url：http://www.jiurong.cn/Api/Public/getCityInfo
+请求参数：
+请求方式：post
+返回json串：{
+    "status": 1,
+    "info": "操作成功",
+    "data": [
+        {
+            “areaId": "1",
+            “areaName": “安庆”,
+            “areaIndex”: “A”,
+        },
+        {
+            “areaId": “2”,
+            “areaName": “安康”,
+            “areaIndex”: “A”,
+        },
+        {
+            “areaId": “3”,
+            “areaName": “安阳”,
+            “areaIndex”: “A”,
+        },
+        {
+            “areaId": “4”,
+            “areaName": “保定”,
+            “areaIndex”: “B”,
+        }
+    ]
+}
+
+areaId 区域id
+areaName 区域名称
+areaIndex 区域索引(拼音首字母)
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+
+
+17.提交卖车信息
+请求url：http://www.jiurong.cn/Api/Public/commitSaleInfo
+请求参数： 车辆品牌id：brandId(0.表示不限品牌)
+         车倆系列id：seriesId(0.表示不限车系)
+         上牌时间：carLicenseTime(时间戳，1467105904)
+         上牌城市：carLicAreaId(0.表示没有选择城市)
+         所在城市：carCurAreaId(0.表示没有选择城市)
+         当前里程：carTravelKm
+         手机号：mobile
+         用户id：userId(默认0，表示未登录用户，如果已登录，会是具体值)
+         卖车平台：salePlatform(1.android 2.iOS 3.WAP)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+     2 => ‘操作失败’
+   217 => '手机号不能为空'
+
+
+18.提交订车信息
+请求url：http://www.jiurong.cn/Api/Public/commitBookInfo
+请求参数： 车辆品牌id：brandId(0.表示不限品牌)
+         车倆系列id：seriesId(0.表示不限车系)
+         上牌城市：carLicAreaId
+         车龄要求：carAge(0.不限 1.1年以内 2.2年以内 3.3年以内 4.4年以内 5.5年以内 6.6年以内)
+         车身颜色：carColor(0.未定义 1.白色 2.红色 3.黑色 4.蓝色 5.黄色 6.橙色 7.绿色 8.紫色 9.金色 10.棕褐色 11.银灰色)
+         购车预算：buyBudget
+         计划提车时间：pickTime(时间戳1467105904)
+         其它要求：remark
+         订车平台：bookPlatform(1.android 2.iOS 3.WAP)
+         用户id：userId(必须是登录用户)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+19.取消订车记录(单个或全部)
+请求url：http://www.jiurong.cn/Api/Public/cancelBook
+请求参数： 订车id：bookId(取消单个订车记录用这个，默认0)  用户id：userId(取消全部时传这个参数，默认0)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+20.获取询价记录
+请求url：http://www.jiurong.cn/Api/Public/getInquiry
+请求参数： 用户id：userId  当前页码：curPageNo 每页显示数目：pageSize(传99999999表示全部) 记录数偏移量：offset(用来修正分页查询起始记录数的，－1表示减1，+1表示加1)
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”: [
+        {
+            “inquiryId”:”1”,
+            “carId”:”1”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI豪华型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isOffShelf”: "0"
+        },
+        {
+            “inquiryId”:”2”,
+            “carId”:”2”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI普通型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isOffShelf”: “1”
+        }
+    ]
+}
+inquiryId表示询价记录id
+carId表示车辆id
+carImageUrl表示车辆缩略图url
+carModeName表示车辆款型名称
+carLicenseTime表示车辆上牌日期
+carTravelKm表示车辆行驶公里数
+carSellPrice表示车辆卖价
+isOffShelf表示是否下架(0.表示未下架 1.表示已下架)
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+
+21.获取收藏记录
+请求url：http://www.jiurong.cn/Api/Public/getCollect
+请求参数： 用户id：userId  当前页码：curPageNo  每页显示数目：pageSize(传99999999表示全部) 记录数偏移量：offset(用来修正分页查询起始记录数的，－1表示减1，+1表示加1)
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”: [
+        {
+            “collectId”:”1”,
+            “carId”:”1”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI豪华型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isOffShelf”: “0”
+        },
+        {
+            “collectId”:”2”,
+            “carId”:”2”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI普通型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isOffShelf”: “1”
+        }
+    ]
+}
+collectId表示收藏记录id
+carId表示车辆id
+carImageUrl表示车辆缩略图url
+carModeName表示车辆款型名称
+carLicenseTime表示车辆上牌日期
+carTravelKm表示车辆行驶公里数
+carSellPrice表示车辆卖价
+isOffShelf表示是否下架0.表示未下架 1.表示已下架)
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+22.获取订车记录
+请求url：http://www.jiurong.cn/Api/Public/getBook
+请求参数： 用户id：userId  当前页码：curPageNo   每页显示数目：pageSize(传99999999表示全部) 记录数偏移量：offset(用来修正分页查询起始记录数的，－1表示减1，+1表示加1)
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”: [
+        {
+            “bookId”:”1”,
+            “carBrandName”: "大众宝来”,
+            “carSeriesName”: "大众宝来”,
+            “carAge”: “1-2年“,
+            “carColor”: “白色”,
+            “carLicArea”: “北京”,
+            “buyBudget”: “7.6万”,
+            “pickTime”: “2016-06-23”,
+            “bookTime”: “2016-05-23”,
+            “remark”: “车身完整，不能有划痕”
+        },
+        {
+            “bookId”:”1”,
+            “carBrandName”: "大众宝来”,
+            “carSeriesName”: "大众速腾",
+            “carAge”: “2-3年“,
+            “carColor”: “红色”,
+            “carLicArea”: “武汉”,
+            “buyBudget”: “8.0万”,
+            “pickTime”: “2016-06-23”,
+            “bookTime”: “2016-05-23”,
+            “remark”: “车身完整，不能有划痕”
+        }
+    ]
+}
+bookId表示订车记录id
+carBrandName表示车辆品牌名称
+carSeriesName表示车辆系列名称
+carAge表示车龄
+carColor表示车辆颜色
+carLicArea表示车辆上牌城市
+buyBudget表示购车预算
+pickTime表示计划提车时间
+bookTime表示订车记录时间
+remark表示订车时备注
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+
+23.获取个人中心信息
+请求url：http://www.jiurong.cn/Api/Public/getUserInfo
+请求参数： 用户id：userId
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”:
+        {
+            “headImageUrl”:”http://www.jiurong.cn/..”,
+            “inquiryCount”: “10”,
+            “bookCount”: “5“,
+            “collectCount”: “12”
+        }
+}
+headImageUrl表示用户头像url
+inquiryCount表示询价记录数
+bookCount表示订车记录数
+collectCount表示收藏记录数
+
+涉及状态码和描述：
+   404 => ‘用户不存在’
+
+
+24.上传头像
+请求url：http://www.jiurong.cn/Api/Public/uploadImage
+请求参数：用户id: userId  类型：type(1.头像)   图片64位字符串:image64Str
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+
+25.获取版本号
+请求url：http://www.jiurong.cn/Api/Public/getVersionInfo
+请求参数：平台：platform(1.android 2.iOS)
+请求方式：post
+返回json串：{
+    "status": 1,
+    "info": "操作成功",
+    "data": {
+        "versionName": "V1.2.1",
+        "versionCode": "12",
+        "versionInfo": "1.修复若干bug;",
+        “upgradeUrl”: “http://www.jiurong.cn/..”,
+        "isForce": "0"
+    }
+}
+
+versionName表示版本名称
+versionCode表示版本代码
+versionInfo表示版本信息
+upgradeUrl表示版本升级url
+isForce表示是否强制升级(0.非强制 1.强制)
+
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+
+26.提交意见反馈
+请求url：http://www.jiurong.cn/Api/Public/commitFeedback
+请求参数： 反馈意见描述：fbDesc
+         手机号：mobile
+         反馈平台：fbPlatform(1.android 2.iOS 3.WAP)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+
+涉及状态码和描述：
+     2 => ‘操作失败’
+   217 => '手机号不能为空'
+
+27.获取购车流程
+请求url：http://www.jiurong.cn/Api/Public/getBuyProcess
+请求参数：
+请求方式：post
+返回页面
+
+28.获取公司咨询
+请求url：http://www.jiurong.cn/Api/Public/getCompanyInfo
+请求参数：
+请求方式：post
+返回页面
+
+29.车辆详情->获取车辆参数配置
+请求url：http://www.jiurong.cn/Api/Public/getCarParam
+请求参数： 车辆id: carId
+请求方式：post
+返回页面
+
+30.车辆详情->获取车辆详细检测报告
+请求url：http://www.jiurong.cn/Api/Public/getInspectReport
+请求参数： 车辆id: carId
+请求方式：post
+返回页面
+
+31.车辆详情->获取车辆保养记录
+请求url：http://www.jiurong.cn/Api/Public/getCareInfo
+请求参数： 车辆id: carId
+请求方式：post
+返回页面
+
+32.车辆评估
+请求url：http://www.jiurong.cn/Api/Public/carEvaluate
+请求参数：
+请求方式：post
+返回页面
+
+33.获取限迁标准
+请求url：http://www.jiurong.cn/Api/Public/getLimitStd
+请求参数：
+请求方式：post
+返回页面
+
+34.关于我们
+请求url：http://www.jiurong.cn/Api/Public/aboutUs
+请求参数：
+请求方式：post
+返回页面
+
+35.常见问题
+请求url：http://www.jiurong.cn/Api/Public/getFAQ
+请求参数：
+请求方式：post
+返回页面
+
+36.获取微信分享配置信息
+请求url：http://www.jiurong.cn/Api/Public/getWXShareInfo
+请求参数：   类型:type(1.车辆详情)
+请求方式：post
+返回json串：{
+    "status": 1,
+    "info": "操作成功",
+    "data": {
+        "wxShareTitle": "玖融网二手车",
+        "wxShareDesc": "身边的人都在用",
+        "wxShareIconUrl”: “http://www.jiurong.cn/..”,
+        "wxShareUrl": "http://www.jiurong.cn/.."
+    }
+}
+wxShareTitle微信分享标题
+wxShareDesc微信分享描述
+wxShareIconUrl微信分享icon链接
+wxShareUrl微信分享跳转链接
+涉及状态码和描述：
+   2 => ‘操作失败’
+
+37.获取好车推荐|最新上架|准新车|练手车|SUV
+请求url：http://www.jiurong.cn/Api/Public/getCarsSpecial
+请求参数： 类型 type(1.好车推荐 2.最新上架 3.准新车 4.练手车 5.SUV)
+         当前页码：curPageNo
+         每页显示数目：pageSize(传99999999表示全部)
+         记录数偏移量：offset(用来修正分页查询起始记录数的，－1表示减1，+1表示加1)
+         用户id：userId 默认0
+请求方式：post
+返回json串：{
+    “status”: 1,
+    “info”: "操作成功",
+    “data”: [
+        {
+            “carId”:”1”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI豪华型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isCollected”: "0"
+        },
+        {
+            “carId”:”2”,
+            “carImageUrl”: "http://www.jiurong.cn/..",
+            “carModeName”: "大众速腾1.4T手动230TSI普通型",
+            “carLicenseTime”: "2010年6月",
+            “carTravelKm”: "1万公里",
+            “carSellPrice”: "12万",
+            “isCollected”: "0"
+        }
+    ]
+}
+carId车辆id
+carImageUrl表示车辆缩略图url
+carModeName表示车辆款型名称
+carLicenseTime表示车辆上牌日期
+carTravelKm表示车辆行驶公里数
+carSellPrice表示车辆卖价
+isCollected表示是否被收藏(0.表示未收藏 1.表示已收藏)
+
+涉及状态码和描述：
+   101 => ‘记录为空'
+
+38.验证手机号
+请求url：http://www.jiurong.cn/Api/Public/validateMobile
+请求参数：手机号：mobile 类型 type(1.注册 2.重置密码)
+请求方式：post
+返回json串：{“status":1,"info”:”操作成功”,”data":{}}
+涉及状态码和描述：
+   201 => ‘手机号不存在’,（type=2时，校验手机号是否存在）
+   211 => '手机号已经被注册', (type=1时，校验手机号是否被注册过)
+
+39.注册->玖融网二手车用户协议
+请求url：http://www.jiurong.cn/Api/Public/getUserAgreement
+请求参数：
+请求方式：post
+返回页面
